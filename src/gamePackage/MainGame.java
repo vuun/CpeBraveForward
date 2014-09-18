@@ -60,16 +60,15 @@ public class MainGame extends BasicGame{
 	}
 	
 	private void updateSmMovement(Input input, int delta) throws SlickException {
-		// TODO Auto-generated method stub
-		 if (input.isKeyDown(Input.KEY_LEFT)) {
+		// TODO Auto-generated method stub 
+		 if (swordman.x > -1 && input.isKeyDown(Input.KEY_LEFT)) {
 		    	swordman.Flip();
 		    	swordman.x -= swordman.mass;
 		    }
-		 if (input.isKeyDown(Input.KEY_RIGHT)) {
+		 if (swordman.x+64 < SCREEN_WIDTH && input.isKeyDown(Input.KEY_RIGHT)) {
 			 	swordman.FlipBack();
 			 	swordman.x += swordman.mass;
 		    }
-		
 	}
 
 	public static void main(String[] args) {
