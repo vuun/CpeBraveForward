@@ -1,6 +1,5 @@
 package gamePackage;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
@@ -14,6 +13,8 @@ public class Monster {
 	private Image image;
 	public float mass;
 	protected Shape shape;
+	public float hp;
+	public float atk;
 	public Monster(float x, float y, float width, float height) throws SlickException {
 	    this.x = x;
 	    this.y = y;
@@ -21,7 +22,9 @@ public class Monster {
 	    this.height = height;
 	    shape = new Rectangle(x , y, MainGame.BASIC_SIZE, MainGame.BASIC_SIZE);
 	    image = new Image("res/Monster.png");
-	    this.mass = 1;
+	    this.mass = (float) 0.8;
+	    this.hp = 10;
+	    this.atk = 1;
 	  }
 	public void render() {
 			image.draw(x,y,width,height);
@@ -39,5 +42,13 @@ public class Monster {
 	public float getX() {
 		// TODO Auto-generated method stub
 		return x;
+	}
+	public void destroy() throws SlickException {
+		// TODO Auto-generated method stub
+		image.destroy();
+	}
+	public boolean isDestroy() {
+		// TODO Auto-generated method stub
+		return image.isDestroyed();
 	}
 }

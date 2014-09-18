@@ -10,6 +10,8 @@ public class Swordman {
 	public float y;
 	private Image image;
 	public float mass;
+	public float hp;
+	public float atk;
 	protected Shape shape = null;
 	public Swordman(float x, float y) throws SlickException {
 	    this.x = x;
@@ -17,6 +19,8 @@ public class Swordman {
 	    shape = new Rectangle(x , y, MainGame.BASIC_SIZE, MainGame.BASIC_SIZE);
 	    image = new Image("res/MainCha.png");
 	    this.mass = 1;
+	    this.hp = 100;
+	    this.atk = 2;
 	  }
 	public void render() {
 		    image.draw(x,y);
@@ -36,5 +40,13 @@ public class Swordman {
 	public float getX() {
 		// TODO Auto-generated method stub
 		return x;
+	}
+	public void destroy() throws SlickException {
+		// TODO Auto-generated method stub
+		image.destroy();
+	}
+	public boolean isDestroy() {
+		// TODO Auto-generated method stub
+		return image.isDestroyed();
 	}
 }

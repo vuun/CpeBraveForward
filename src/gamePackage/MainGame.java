@@ -6,6 +6,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
@@ -27,11 +28,16 @@ public class MainGame extends BasicGame{
 	@Override
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		// TODO Auto-generated method stub
+
 		swordman.render();
+		 if( swordman.hp < 0 ){
+			 g.drawString("YOU DIED", SCREEN_WIDTH/2+100, 10);
+		 }
 		BG.render();
-		monster.render();
+		if(monster.isDestroy() == false)
+		{monster.render();}
 		drawTimes(g);
-		g.drawString("" + collide, SCREEN_WIDTH/2+100, 10);
+		//g.drawString("" + collide, SCREEN_WIDTH/2+100, 10);
 	
 	}
 
@@ -66,20 +72,45 @@ public class MainGame extends BasicGame{
 		 timesController();
 		 BGController();
 		 monsterController();
+		 battleController();
 		 
 
 	}
 
-	private void monsterController() {
-		 if( swordman.shape.intersects(monster.shape) != true){
-			monster.x -= 0.3;
-			 
+	private void battleController() throws SlickException {
+		if( swordman.shape.intersects(monster.shape) != true){
+			monster.x -= 0.3;	 
+		 }
+		 else{
+			 if( swordman.mass > monster.mass){
+				 
+				 //atk animation
+				 swordman.x -= monster.mass * 5;
+				 monster.x += monster.mass * 5;
+				 //battle
+				 swordman.hp -= monster.atk;
+				 monster.hp -= swordman.atk;
+				 //died
+				 if( monster.hp < 0 ){
+					monster.shape.setLocation(-20, -20);
+					monster.destroy();
+				 }
+				 
+				 //
+				 monster.x += swordman.mass * 1.25;
+				 //swordman.x -= swordman.mass - monster.mass;
+			 }
 		 }
 		if( monster.x < -100 ){
 			monster.setPosition();
 		}
+	}
+
+	private void monsterController() {
+
 		//shape
-		monster.shape.setLocation(monster.getX(), monster.getY());
+		if(monster.isDestroy() == false)
+		{monster.shape.setLocation(monster.getX(), monster.getY());}
 		//shape
 	}
 
