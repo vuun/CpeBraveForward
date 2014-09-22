@@ -28,7 +28,7 @@ public class Monster {
 	    image = new Image("res/Monster.png");
 	    this.mass = (float) 0.8;
 	    speed = (float) ((1/mass) * (0.2) * 17);
-	    this.hp = 100;
+	    this.hp = 60;
 	    this.atk = 1;
 	  }
 	
