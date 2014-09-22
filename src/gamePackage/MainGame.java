@@ -1,4 +1,7 @@
 package gamePackage;
+import java.awt.Container;
+
+import org.lwjgl.opengl.XRandR.Screen;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
@@ -20,6 +23,7 @@ public class MainGame extends BasicGame{
 	BackGround BG;
 	Monster monster;
 	Boolean collide = false;
+	Boolean reinit = false;
 	public MainGame(String title) {
 		super(title);
 		// TODO Auto-generated constructor stub
@@ -28,11 +32,14 @@ public class MainGame extends BasicGame{
 	@Override
 	public void render(GameContainer container, Graphics g) throws SlickException {
 		// TODO Auto-generated method stub
-
-		swordman.render();
+		//test
+		g.drawString("Player Hp : "+swordman.hp, SCREEN_WIDTH/2+100, 30);
+		g.drawString("Monster Hp : "+monster.hp, SCREEN_WIDTH/2+100, 50);
 		 if( swordman.hp < 0 ){
 			 g.drawString("YOU DIED", SCREEN_WIDTH/2+100, 10);
 		 }
+		 
+		swordman.render();
 		BG.render();
 		if(monster.isDestroy() == false)
 		{monster.render();}
@@ -73,32 +80,45 @@ public class MainGame extends BasicGame{
 		 BGController();
 		 monsterController();
 		 battleController();
-		 
+		 REPLAYABLE(container, input);
 
 	}
 
+	private void REPLAYABLE(GameContainer container, Input input) throws SlickException {
+		if( reinit == true ){
+			container.reinit();
+			reinit = false;
+		}
+	}
+
+
+	
+
 	private void battleController() throws SlickException {
 		if( swordman.shape.intersects(monster.shape) != true){
-			monster.x -= 0.3;	 
+			monster.x -= 2;	 
 		 }
 		 else{
 			 if( swordman.mass > monster.mass){
 				 
 				 //atk animation
-				 swordman.x -= monster.mass * 5;
-				 monster.x += monster.mass * 5;
+				 swordman.x -= monster.mass * 50 * (1/swordman.mass);
+				 monster.x += (1/monster.mass) * 20; 
+				 monster.x += swordman.mass * 5;
 				 //battle
 				 swordman.hp -= monster.atk;
-				 monster.hp -= swordman.atk;
+				 if(swordman.front==true){
+					 monster.hp -= swordman.atk;
+			 	 }
 				 //died
-				 if( monster.hp < 0 ){
+				 if( monster.hp <= 0 ){
 					monster.shape.setLocation(-20, -20);
 					monster.destroy();
+					
+					reinit=true;
 				 }
 				 
-				 //
-				 monster.x += swordman.mass * 1.25;
-				 //swordman.x -= swordman.mass - monster.mass;
+
 			 }
 		 }
 		if( monster.x < -100 ){
@@ -111,7 +131,7 @@ public class MainGame extends BasicGame{
 		//shape
 		if(monster.isDestroy() == false)
 		{monster.shape.setLocation(monster.getX(), monster.getY());}
-		//shape
+		//
 	}
 
 	private void BGController() {
@@ -129,19 +149,36 @@ public class MainGame extends BasicGame{
 		// TODO Auto-generated method stub
 		//shape
 		swordman.shape.setLocation(swordman.getX(),swordman.getY());
-		//
+		//control
 		if (swordman.x > -1 && input.isKeyDown(Input.KEY_LEFT)) {
 		    	swordman.Flip();
-		    	swordman.x -= swordman.mass;
+		    	swordman.x -= swordman.speed;
+		}
+		if (swordman.y <= SCREEN_HEIGHT-100 && input.isKeyDown(Input.KEY_DOWN)) {		    
+	    	swordman.y += swordman.speed;
+		}
+		if (swordman.y >= SCREEN_HEIGHT/2 && input.isKeyDown(Input.KEY_UP)) {  	
+	    	swordman.y -= swordman.speed;
 		}
 		
-		 if( swordman.shape.intersects(monster.shape) != true){
+		else if( swordman.shape.intersects(monster.shape) != true){
+			
 			 if (swordman.x+64 < SCREEN_WIDTH && input.isKeyDown(Input.KEY_RIGHT)) {
 				 	swordman.FlipBack();
-				 	swordman.x += swordman.mass;
+				 	swordman.x += swordman.speed;
 			    }
 				 
 		}
+		//x-axis check
+		if(swordman.x <= 0){
+			swordman.x = 0;
+		}
+
+		if(swordman.x+64 >= SCREEN_WIDTH){
+			swordman.x = SCREEN_WIDTH-64;
+		}
+		 
+
 	}
 
 	public static void main(String[] args) {
@@ -149,6 +186,7 @@ public class MainGame extends BasicGame{
 				  MainGame game = new MainGame("BraveForward");
 				  AppGameContainer appgc = new AppGameContainer(game);
 				  appgc.setDisplayMode(SCREEN_WIDTH,SCREEN_HEIGHT, false);
+				  appgc.setTargetFrameRate(100);
 				  appgc.start();
 				} catch (SlickException e) {
 				  e.printStackTrace();
