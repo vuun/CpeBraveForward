@@ -8,6 +8,8 @@ import org.newdawn.slick.geom.Shape;
 public class Swordman {
 	public float x;
 	public float y;
+	public float DMG;
+	public float fadetimes;
 	
 	public float mass;
 	public float hp;
@@ -23,10 +25,12 @@ public class Swordman {
 	    this.y = y;
 	    shape = new Rectangle(x , y, MainGame.BASIC_SIZE, MainGame.BASIC_SIZE);
 	    image = new Image("res/MainCha.png");
-	    this.mass = 1;
+	    this.mass = 3;
 	    speed = (float) ((1/mass) * (0.2) * 17);
 	    this.hp = 200;
 	    this.atk = 2;
+	    this.DMG = 0;
+	    front = true;
 	  }
 	
 	public void render() {

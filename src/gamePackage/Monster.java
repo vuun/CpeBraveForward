@@ -6,8 +6,10 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
 public class Monster {
+	public float DMG;
 	public float x;
 	public float y;
+	public float fadetimes;
 	
 	public float width;
 	public float height;
@@ -26,10 +28,12 @@ public class Monster {
 	    this.height = height;
 	    shape = new Rectangle(x , y, MainGame.BASIC_SIZE, MainGame.BASIC_SIZE);
 	    image = new Image("res/Monster.png");
-	    this.mass = (float) 0.8;
+	    this.mass = (float) 2.2;
 	    speed = (float) ((1/mass) * (0.2) * 17);
 	    this.hp = 60;
 	    this.atk = 1;
+	    this.DMG = 0;
+	    this.fadetimes = 0;
 	  }
 	
 	public void render() {
@@ -61,5 +65,7 @@ public class Monster {
 		// TODO Auto-generated method stub
 		return image.isDestroyed();
 	}
+
+
 	
 }
