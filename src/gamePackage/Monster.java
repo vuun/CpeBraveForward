@@ -6,6 +6,7 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
 public class Monster {
+	public boolean isDestroy = false;
 	public float DMG;
 	public float x;
 	public float y;
@@ -58,13 +59,11 @@ public class Monster {
 	
 	public void destroy() throws SlickException {
 		// TODO Auto-generated method stub
-		image.destroy();
+		//image.destroy();
+		isDestroy = true;
 	}
 	
-	public boolean isDestroy() {
-		// TODO Auto-generated method stub
-		return image.isDestroyed();
-	}
+
 
 
 	

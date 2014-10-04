@@ -2,9 +2,6 @@ package gamePackage;
 
 
 
-import java.awt.Container;
-
-import org.lwjgl.opengl.XRandR.Screen;
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
@@ -12,15 +9,13 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Circle;
-import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
 
 
 public class MainGame extends BasicGame{
 	protected static int SCREEN_WIDTH = 680;
 	protected static int SCREEN_HEIGHT = 480;
 	protected static int BASIC_SIZE = 64;
+	protected static int MON_NUM= 9;
 	protected double times = 0;
 	Swordman swordman;
 	BackGround BG;
@@ -45,7 +40,7 @@ public class MainGame extends BasicGame{
 //		{monster.render();}
 	
 		for (Monster monster : monsters) {
-			if(monster.isDestroy() == false){
+			if(monster.isDestroy == false){
 		      monster.render();
 		    }
 		}
@@ -109,9 +104,16 @@ public class MainGame extends BasicGame{
 		change_BG_Color(container);
 		swordman = new Swordman( SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 		//monster = new Monster( SCREEN_WIDTH, SCREEN_HEIGHT/2, BASIC_SIZE , BASIC_SIZE);
-		monsters = new Monster[3];
-	    for (int i = 0; i < 3; i++) {
-	      monsters[i] = new Monster( SCREEN_WIDTH, SCREEN_HEIGHT/2 + (64*i), BASIC_SIZE , BASIC_SIZE);
+		monsters = new Monster[MON_NUM];
+		int row = 0;
+	    for (int i = 0; i < MON_NUM; i++) {
+	    	if(row>4){row=0;}
+	    	monsters[i] = new Monster( SCREEN_WIDTH, SCREEN_HEIGHT/2 + (64*row), BASIC_SIZE , BASIC_SIZE);
+	    	if(i>4){
+	    		monsters[i] = new Monster( SCREEN_WIDTH + 64*3, SCREEN_HEIGHT/2 + (64*row), BASIC_SIZE , BASIC_SIZE);
+	    	}
+	    	row++;
+
 	    }
 	    //
 		BG = new BackGround(SCREEN_WIDTH/2 + 20, SCREEN_HEIGHT/2 + -170);
@@ -144,7 +146,7 @@ public class MainGame extends BasicGame{
 			 BGController();
 			 monsterController(monster);
 			 battleController(monster);
-			 //REPLAYABLE(container, input);
+			 REPLAYABLE(container, input);
 		 }
 
 	}
@@ -184,7 +186,6 @@ public class MainGame extends BasicGame{
 				monster.shape.setLocation(-20, -20);
 				monster.destroy();
 				
-				reinit=true;
 			 }
 			 
 		
@@ -197,7 +198,7 @@ public class MainGame extends BasicGame{
 	private void monsterController(Monster monster) {
 		
 		//shape
-		if(monster.isDestroy() == false)
+		if(monster.isDestroy == false)
 		{monster.shape.setLocation(monster.getX(), monster.getY());}
 		//
 	}
@@ -223,7 +224,7 @@ public class MainGame extends BasicGame{
 		//control
 		if (swordman.x > -1 && input.isKeyDown(Input.KEY_LEFT)) {
 		    	swordman.Flip();
-		    	swordman.x -= swordman.speed;
+		    	swordman.x -= swordman.speed/2;
 		}
 		if (swordman.y <= SCREEN_HEIGHT/2 +(64*3)+1 && input.isKeyDown(Input.KEY_DOWN)) {		    
 	    	swordman.y += swordman.speed;
@@ -236,7 +237,7 @@ public class MainGame extends BasicGame{
 			
 			 if (swordman.x+64 < SCREEN_WIDTH && input.isKeyDown(Input.KEY_RIGHT)) {
 				 	swordman.FlipBack();
-				 	swordman.x += swordman.speed;
+				 	swordman.x += swordman.speed/2;
 			    }
 				 
 		}
@@ -247,6 +248,7 @@ public class MainGame extends BasicGame{
 		//x-axis check
 		if(swordman.x <= 0){
 			swordman.x = 0;
+			reinit=true;
 		}
 
 		if(swordman.x+64 >= SCREEN_WIDTH){
