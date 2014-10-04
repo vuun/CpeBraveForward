@@ -29,7 +29,7 @@ public class Monster {
 	    this.width = width;
 	    this.height = height;
 	    shape = new Rectangle(x , y, 10, MainGame.BASIC_SIZE);
-	    monsterBehind = new Rectangle(x+11 ,y , 54, MainGame.BASIC_SIZE);
+	    monsterBehind = new Rectangle(x+11 ,y , 40, MainGame.BASIC_SIZE);
 	    image = new Image("res/Monster.png");
 	    this.mass = (float) mass;
 	    speed = (float) (2.5);
