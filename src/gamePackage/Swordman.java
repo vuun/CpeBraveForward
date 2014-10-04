@@ -26,7 +26,7 @@ public class Swordman {
 	    shape = new Rectangle(x , y, MainGame.BASIC_SIZE, MainGame.BASIC_SIZE);
 	    image = new Image("res/MainCha.png");
 	    this.mass = 3;
-	    speed = (float) ((1/mass) * (0.2) * 17);
+	    speed = (float) ((1/mass)/14);
 	    this.hp = 200;
 	    this.atk = 2;
 	    this.DMG = 0;

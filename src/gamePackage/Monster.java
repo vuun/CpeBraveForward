@@ -16,21 +16,23 @@ public class Monster {
 	public float height;
 	private Image image;
 	protected Shape shape;
+	protected Shape monsterBehind;
 	
 	public float mass;
 	public float hp;
 	public float atk;
 	public float speed;
 	
-	public Monster(float x, float y, float width, float height) throws SlickException {
+	public Monster(float x, float y, float width, float height, float mass) throws SlickException {
 	    this.x = x;
 	    this.y = y;
 	    this.width = width;
 	    this.height = height;
-	    shape = new Rectangle(x , y, MainGame.BASIC_SIZE, MainGame.BASIC_SIZE);
+	    shape = new Rectangle(x , y, 10, MainGame.BASIC_SIZE);
+	    monsterBehind = new Rectangle(x+11 ,y , 54, MainGame.BASIC_SIZE);
 	    image = new Image("res/Monster.png");
-	    this.mass = (float) 2.2;
-	    speed = (float) ((1/mass) * (0.2) * 17);
+	    this.mass = (float) mass;
+	    speed = (float) (2.5);
 	    this.hp = 60;
 	    this.atk = 1;
 	    this.DMG = 0;
@@ -61,6 +63,8 @@ public class Monster {
 		// TODO Auto-generated method stub
 		//image.destroy();
 		isDestroy = true;
+		shape.setLocation(-20, -20);
+		monsterBehind.setLocation(-20, -20);
 	}
 	
 
