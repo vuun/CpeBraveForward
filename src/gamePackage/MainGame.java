@@ -18,6 +18,7 @@ public class MainGame extends BasicGame{
 	protected static int MON_NUM= 12;
 	protected double times = 0;
 	protected double totaltimes = 0;
+	protected double levelRandomDelay = 0;
 	float deltax = 0;
 	Swordman swordman;
 	BackGround BG;
@@ -111,7 +112,7 @@ public class MainGame extends BasicGame{
 		change_BG_Color(container);
 		BG = new BackGround(0, 0, "ground+cloud");
 		darkBG = new BackGround(0, 0, "dark");
-		goddess= new BackGround((float) Math.random()*680, 75, "goddess");
+		goddess= new BackGround((float) Math.random()*500, 75, "goddess");
 		swordman = new Swordman( SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
 		monsterInit();
 		timesInit();
@@ -164,15 +165,29 @@ public class MainGame extends BasicGame{
 			 goddessController(container, input);
 		 }
 		 //
+		 levelController(container);
 		 goddess.goddessFlash();
 		 gameMenu(container, input);
 
 	}
 
+	private void levelController(GameContainer container) {
+		for (Monster monster : monsters){
+			levelRandomDelay += 0.01 *deltax /60;
+			if(levelRandomDelay > 0.5) {
+				monster.speed = (float) ( (2.5) * (float)(1*Math.random()));
+				levelRandomDelay = 0;
+			}
+			if(totaltimes >= 50 ){
+			 times -= 0.01 *deltax /60 /(totaltimes/50*2);
+			}
+		}
+	}
+
 	private void goddessController(GameContainer container, Input input) {
 		if(swordman.shape.intersects(goddess.shape) && input.isKeyDown(Input.KEY_Z)){
-			 container.setPaused(true);
-			 goddess.x = (float) Math.random()*680;
+			 //container.setPaused(true);
+			 goddess.x = (float) Math.random()*550;
 			 times = 30;
 		 }
 		goddess.shape.setLocation(goddess.getX()+64,goddess.getY());
@@ -244,7 +259,6 @@ public class MainGame extends BasicGame{
 			monster.setPosition();
 		}
 		
-		monster.mass = (float) (3 + totaltimes / 10000);
 	}
 
 	private void BGController() {
