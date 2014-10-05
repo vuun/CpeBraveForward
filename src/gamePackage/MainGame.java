@@ -7,6 +7,7 @@ import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
@@ -25,6 +26,7 @@ public class MainGame extends BasicGame{
 	BackGround BG;
 	BackGround darkBG;
 	BackGround goddess;
+	Dialog intro;
 	Monster[] monsters;
 	Boolean collide = false;
 	Boolean reinit = false;
@@ -54,6 +56,9 @@ public class MainGame extends BasicGame{
 		//damageGraphicController(g);
 		drawTimes(g);
 		darkBG.render();
+		if(intro.animation <= 2 || gameIsOver == true){
+			intro.render();
+		}
 		//g.drawString("" + swordAtBehind, SCREEN_WIDTH/2+100, 10);
 	
 	}
@@ -70,16 +75,16 @@ public class MainGame extends BasicGame{
 //		}
 		String fastMsg = "";
 		if(lv == 1){
-			fastMsg = "Timer is Faster!!";
+			fastMsg = "Stamina reduce rate is Faster!!";
 		}
 		if(lv == 2){
-			fastMsg = "Timer is MORE Faster!!";
+			fastMsg = "Stamina reduce rate is MORE Faster!!";
 		}
 		if(lv == 3){
-			fastMsg = "Timer is Nearly FASTEST!!";
+			fastMsg = "Stamina reduce rate is Nearly FASTEST!!";
 		}
 		if(lv == 4){
-			fastMsg = "Timer is GODLIKE!!";
+			fastMsg = "Stamina reduce rate is GODLIKE!!";
 		}
 		g.drawString(""+fastMsg, SCREEN_WIDTH/2, 30);
 
@@ -117,17 +122,19 @@ public class MainGame extends BasicGame{
 		}
 
 	private void drawTimes(Graphics g) {
-		g.drawString("Timer : " + (int)times, SCREEN_WIDTH/2, 10);
-		g.drawString("Total : " + (int)totaltimes, SCREEN_WIDTH/2, 50);
+		g.drawString("Stamina : " + (int)times, SCREEN_WIDTH/2, 10);
+		g.drawString("Total Times: " + (int)totaltimes, SCREEN_WIDTH/2, 50);
 	}
 
 	@Override
 	public void init(GameContainer container) throws SlickException {
 		change_BG_Color(container);
+		container.pause();
 		BG = new BackGround(0, 0, "ground+cloud");
 		darkBG = new BackGround(0, 0, "dark");
 		goddess= new BackGround((float) Math.random()*500, 175, "goddess");
 		swordman = new Swordman( SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+		intro = new Dialog(0,352);
 		monsterInit();
 		timesInit();
 		
@@ -173,7 +180,7 @@ public class MainGame extends BasicGame{
 		 //monster involved
 		 for (Monster monster : monsters){
 			 playerController(input, delta, monster, container);
-			 timesAndAnimationController(container, monster);
+			 timesAndAnimationController(container, monster, input);
 			 BGController();
 			 monsterController(monster);
 			 battleController(monster);
@@ -184,6 +191,7 @@ public class MainGame extends BasicGame{
 		 //
 		 levelController(container);
 		 goddess.goddessFlash();
+		 intro.dialogChange();
 		 gameMenu(container, input);
 
 	}
@@ -215,7 +223,7 @@ public class MainGame extends BasicGame{
 	}
 
 	private void goddessController(GameContainer container, Input input) {
-		if(swordman.shape.intersects(goddess.shape) && input.isKeyDown(Input.KEY_Z)){
+		if(swordman.shape.intersects(goddess.shape) && input.isKeyPressed(Input.KEY_Z)){
 			 //container.setPaused(true);
 			 goddess.x = (float) Math.random()*550;
 			 times = 30;
@@ -224,12 +232,8 @@ public class MainGame extends BasicGame{
 	}
 
 	private void gameMenu(GameContainer container, Input input) {
-		if(input.isKeyDown(Input.KEY_SPACE) && gameIsOver == false){
-			 if(container.isPaused()){
-				 container.setPaused(false);
-			 }
-		}
-		if(input.isKeyDown(Input.KEY_ENTER)){
+
+		if(input.isKeyPressed(Input.KEY_ENTER)){
 			reinit = true;
 		}
 	}
@@ -298,7 +302,7 @@ public class MainGame extends BasicGame{
 		}
 	}
 
-	private void timesAndAnimationController(GameContainer container, Monster monster) {
+	private void timesAndAnimationController(GameContainer container, Monster monster, Input input) {
 		times -= 0.01 *deltax /60;
 		totaltimes += 0.01 *deltax /60;
 		swordman.animationTimes += 0.01 *deltax /20;
@@ -325,6 +329,15 @@ public class MainGame extends BasicGame{
 				monster.animation = 0;
 			}
 		}
+		
+		if(input.isKeyPressed(Input.KEY_Z)){
+			intro.animation += 1;
+			if(intro.animation == 3){
+				container.resume();
+				intro.animation += 1;
+			}
+		}
+
 		if(times <= 0){
 			times = 0;
 			container.setPaused(true);
