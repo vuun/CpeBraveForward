@@ -11,6 +11,8 @@ public class Monster {
 	public float x;
 	public float y;
 	public float fadetimes;
+	public float animationTimes;
+	public int animation = 0;
 	
 	public float width;
 	public float height;
@@ -30,7 +32,7 @@ public class Monster {
 	    this.height = height;
 	    shape = new Rectangle(x , y, 10, MainGame.BASIC_SIZE);
 	    monsterBehind = new Rectangle(x+11 ,y , 40, MainGame.BASIC_SIZE);
-	    image = new Image("res/Monster.png");
+	    image = new Image("res/Dog1.png");
 	    this.mass = (float) mass;
 	    speed = (float) (2.5);
 	    this.hp = 60;
@@ -42,6 +44,15 @@ public class Monster {
 	public void render() {
 			image.draw(x,y,width,height);
 	}
+	public void dogRun() throws SlickException {
+		// TODO Auto-generated method stub	
+		if(animation ==0){image = new Image("res/Dog1.png");}
+		if(animation ==1){image = new Image("res/Dog2.png");}
+		if(animation ==2){image = new Image("res/Dog3.png");}
+		if(animation ==3){image = new Image("res/Dog4.png");}
+		if(animation ==4){image = new Image("res/Dog5.png");}
+	}
+	
 	
 	public void setPosition() {
 		// TODO Auto-generated method stub
