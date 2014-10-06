@@ -1,6 +1,8 @@
 package gamePackage;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
@@ -93,5 +95,57 @@ public class Swordman {
 	public boolean isDestroy() {
 		// TODO Auto-generated method stub
 		return image.isDestroyed();
+	}
+
+	void playerController(MainGame mainGame, Input input, int delta, Monster monster, GameContainer container) throws SlickException {
+		//shape
+		shape.setLocation(getX(),getY());
+		//control
+		if (x > -32 && input.isKeyDown(Input.KEY_LEFT)  && mainGame.swordAtBehind == false) {
+		    	Flip();
+		    	x -= delta*speed;
+		    	mainGame.swordAtBehind = false;
+	
+		}
+		if (y <= MainGame.SCREEN_HEIGHT/2 +(64*3)+1 && input.isKeyDown(Input.KEY_DOWN)) {
+			mainGame.swordAtBehind = false;
+			Facedown();
+	    	y += delta*speed;
+		}
+		if (input.isKeyDown(Input.KEY_UP)) {
+			mainGame.swordAtBehind = false;
+			Faceup();
+			if(y >= MainGame.SCREEN_HEIGHT/2 -(32) ){
+			y -= delta*speed;}
+	
+		}
+		
+		else if( shape.intersects(monster.shape) != true){
+			
+			 if (x+64 < MainGame.SCREEN_WIDTH && input.isKeyDown(Input.KEY_RIGHT)) {
+				 	FlipBack();
+				 	mainGame.swordAtBehind = false;
+				 	x += delta*speed;
+			    }
+				 
+		}
+		//hp control
+		if(hp <= 0){
+			hp = 0;
+		}
+		//x-axis check
+		if(x <= -32){
+			x = -32;
+			mainGame.gameIsOver=true;
+			container.setPaused(true);
+		}
+	
+		if(x+64 >= MainGame.SCREEN_WIDTH){
+			x = MainGame.SCREEN_WIDTH-64;
+		}
+		if(shape.intersects(monster.monsterBehind)){
+			mainGame.swordAtBehind = true;
+		}
+			 
 	}
 }

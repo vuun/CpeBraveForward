@@ -16,12 +16,12 @@ public class MainGame extends BasicGame{
 	protected static int SCREEN_WIDTH = 680;
 	protected static int SCREEN_HEIGHT = 480;
 	protected static int BASIC_SIZE = 64;
-	protected static int MON_NUM= 12;
+	protected static int MON_NUM = 12;
 	protected double times = 0;
 	protected double totaltimes = 0;
 	protected double levelRandomDelay = 0;
 	protected double lv = 0;
-	float deltax = 0;
+	float deltaX = 0;
 	Swordman swordman;
 	BackGround BG;
 	BackGround darkBG;
@@ -65,7 +65,7 @@ public class MainGame extends BasicGame{
 
 	private void Others(Graphics g) {
 		//test each hp
-		if(gameIsOver==true){
+		if(gameIsOver == true){
 			g.drawString("Game Over", SCREEN_WIDTH/2, 70);
 		}
 //		for (Monster monster : monsters){
@@ -132,8 +132,8 @@ public class MainGame extends BasicGame{
 		container.pause();
 		BG = new BackGround(0, 0, "ground+cloud");
 		darkBG = new BackGround(0, 0, "dark");
-		goddess= new BackGround((float) Math.random()*500, 175, "goddess");
-		swordman = new Swordman( SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+		swordman = new Swordman( SCREEN_WIDTH/2, SCREEN_HEIGHT / 2);
+		goddess= new BackGround( swordman.getX() + 64, 175, "goddess");
 		intro = new Dialog(0,352);
 		monsterInit();
 		timesInit();
@@ -150,12 +150,12 @@ public class MainGame extends BasicGame{
 		//monster = new Monster( SCREEN_WIDTH, SCREEN_HEIGHT/2, BASIC_SIZE , BASIC_SIZE);
 		monsters = new Monster[MON_NUM];
 	    for (int i = 0; i < MON_NUM; i++) {
-	    	monsters[i] = new Monster( SCREEN_WIDTH, SCREEN_HEIGHT/2 + (64*(i%4)), BASIC_SIZE +10 , BASIC_SIZE, (float) 1.7);
+	    	monsters[i] = new Monster( SCREEN_WIDTH, SCREEN_HEIGHT / 2 + (64 * (i % 4)), BASIC_SIZE + 10 , BASIC_SIZE, (float) 1.7);
 	    	if(i>=4){
-	    		monsters[i] = new Monster( SCREEN_WIDTH + 64*3, SCREEN_HEIGHT/2 + (64*(i%4)), BASIC_SIZE +10, BASIC_SIZE, (float) 1.7);
+	    		monsters[i] = new Monster( SCREEN_WIDTH + 64 * 3, SCREEN_HEIGHT/2 + (64 * (i % 4)), BASIC_SIZE + 10, BASIC_SIZE, (float) 1.7);
 	    	}
 	    	if(i>=8){
-	    		monsters[i] = new Monster( SCREEN_WIDTH + 64*6, SCREEN_HEIGHT/2 + (64*(i%4)), BASIC_SIZE +10, BASIC_SIZE, (float) 1.7);
+	    		monsters[i] = new Monster( SCREEN_WIDTH + 64 * 6, SCREEN_HEIGHT/2 + (64 * (i % 4)), BASIC_SIZE + 10, BASIC_SIZE, (float) 1.7);
 	    	}
 
 	    }
@@ -173,13 +173,13 @@ public class MainGame extends BasicGame{
 
 	@Override
 	public void update(GameContainer container, int delta) throws SlickException {
-		 deltax=delta;
+		 deltaX = delta;
 		 Input input = container.getInput();
 		 if(input.isKeyDown(Input.KEY_A))
 			 totaltimes += 10;
 		 //monster involved
 		 for (Monster monster : monsters){
-			 playerController(input, delta, monster, container);
+			 swordman.playerController(this, input, delta, monster, container);
 			 timesAndAnimationController(container, monster, input);
 			 BGController();
 			 monsterController(monster);
@@ -189,16 +189,18 @@ public class MainGame extends BasicGame{
 			 monster.dogRun();
 		 }
 		 //
+		 //others controller
 		 levelController(container);
 		 goddess.goddessFlash();
 		 intro.dialogChange();
 		 gameMenu(container, input);
+		 //
 
 	}
 
 	private void levelController(GameContainer container) {
 		for (Monster monster : monsters){
-			levelRandomDelay += 0.01 *deltax /60;
+			levelRandomDelay += 0.01 *deltaX /60;
 			if(levelRandomDelay > 0.5) {
 				monster.speed = (float) ( (2.5) * (float)(1+Math.random()));
 				levelRandomDelay = 0;
@@ -206,19 +208,19 @@ public class MainGame extends BasicGame{
 		}
 		if( (int)(totaltimes) > 45 ){
 			lv = 1;
-			times -= 0.01 *deltax /60 /4;
+			times -= 0.01 *deltaX /60 /4;
 		}
 		if( (int)(totaltimes) > 95 ){
 			lv = 2;
-			times -= 0.01 *deltax /60/2;
+			times -= 0.01 *deltaX /60/2;
 		}
 		if( (int)(totaltimes) > 150 ){
 			lv = 3;
-			times -= 0.01 *deltax /60;
+			times -= 0.01 *deltaX /60;
 		}
 		if( (int)(totaltimes) > 250 ){
 			lv = 4;
-			times -= 0.01 *deltax /60;
+			times -= 0.01 *deltaX /60;
 		}
 	}
 
@@ -252,14 +254,15 @@ public class MainGame extends BasicGame{
 
 	private void battleController(Monster monster) throws SlickException {
 			if( swordman.shape.intersects(monster.shape) != true){
-				monster.x -= monster.speed *deltax/17;	 
+				monster.x -= monster.speed * deltaX / 17;	 
 			 }
 			 else{
-			 //atk animation
-			 swordman.x -= monster.mass * 50 * (1/swordman.mass) *deltax/17;
-			 monster.x += (1/monster.mass) * 20 *deltax/17; 
-			 monster.x += swordman.mass * 5 *deltax /17;
-			 //battle
+			 //atk animation (bounce)
+			 swordman.x -= monster.mass * 50 * (1 / swordman.mass) * deltaX / 17;
+			 monster.x += (1 / monster.mass) * 20 * deltaX / 17; 
+			 monster.x += swordman.mass * 5 * deltaX / 17;
+			 //
+			 //battle 
 			 swordman.hp -= monster.atk;
 			 swordman.DMG = monster.atk;
 			 if(swordman.front==true){
@@ -303,9 +306,18 @@ public class MainGame extends BasicGame{
 	}
 
 	private void timesAndAnimationController(GameContainer container, Monster monster, Input input) {
-		times -= 0.01 *deltax /60;
-		totaltimes += 0.01 *deltax /60;
-		swordman.animationTimes += 0.01 *deltax /20;
+		//timescontrol
+		times -= 0.01 *deltaX / 60;
+		totaltimes += 0.01 *deltaX / 60;
+		if(times <= 0){
+			times = 0;
+			container.setPaused(true);
+			gameIsOver = true;
+			
+		}
+		//
+		//animation
+		swordman.animationTimes += 0.01 *deltaX / 20;
 		if(swordman.animationTimes >= 1){
 			swordman.animationTimes = 0;
 			swordman.animation += 1;
@@ -313,7 +325,7 @@ public class MainGame extends BasicGame{
 				swordman.animation = 0;
 			}
 		}
-		goddess.animationTimes += 0.01 *deltax /20;
+		goddess.animationTimes += 0.01 *deltaX / 20;
 		if(goddess.animationTimes >= 1){
 			goddess.animationTimes = 0;
 			goddess.animation += 1;
@@ -321,7 +333,7 @@ public class MainGame extends BasicGame{
 				goddess.animation = 0;
 			}
 		}
-		monster.animationTimes += 0.01 *deltax /1.5;
+		monster.animationTimes += 0.01 *deltaX / 1.5;
 		if(monster.animationTimes >= 1){
 			monster.animationTimes = 0;
 			monster.animation += 1;
@@ -337,64 +349,10 @@ public class MainGame extends BasicGame{
 				intro.animation += 1;
 			}
 		}
+		//
 
-		if(times <= 0){
-			times = 0;
-			container.setPaused(true);
-			gameIsOver = true;
-			
-		}
 	}
 	
-	private void playerController(Input input, int delta, Monster monster,GameContainer container) throws SlickException {
-		//shape
-		swordman.shape.setLocation(swordman.getX(),swordman.getY());
-		//control
-		if (swordman.x > -32 && input.isKeyDown(Input.KEY_LEFT)  && swordAtBehind == false) {
-		    	swordman.Flip();
-		    	swordman.x -= delta*swordman.speed;
-
-		}
-		if (swordman.y <= SCREEN_HEIGHT/2 +(64*3)+1 && input.isKeyDown(Input.KEY_DOWN)) {
-			swordAtBehind = false;
-			swordman.Facedown();
-	    	swordman.y += delta*swordman.speed;
-		}
-		if (swordman.y >= SCREEN_HEIGHT/2 -(32) && input.isKeyDown(Input.KEY_UP)) {
-			swordAtBehind = false;
-			swordman.Faceup();
-	    	swordman.y -= delta*swordman.speed;
-		}
-		
-		else if( swordman.shape.intersects(monster.shape) != true){
-			
-			 if (swordman.x+64 < SCREEN_WIDTH && input.isKeyDown(Input.KEY_RIGHT)) {
-				 	swordman.FlipBack();
-				 	swordAtBehind = false;
-				 	swordman.x += delta*swordman.speed;
-			    }
-				 
-		}
-		//hp control
-		if(swordman.hp <= 0){
-			swordman.hp = 0;
-		}
-		//x-axis check
-		if(swordman.x <= -32){
-			swordman.x = -32;
-			gameIsOver=true;
-			container.setPaused(true);
-		}
-
-		if(swordman.x+64 >= SCREEN_WIDTH){
-			swordman.x = SCREEN_WIDTH-64;
-		}
-		if(swordman.shape.intersects(monster.monsterBehind)){
-			swordAtBehind = true;
-		}
-			 
-	}
-
 	public static void main(String[] args) {
 		try {
 				  MainGame game = new MainGame("BraveForward");
