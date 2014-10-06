@@ -25,7 +25,7 @@ public class BackGround {
 	    {image = new Image("res/dark.png");}
 	    if(name == "goddess")
 	    {
-	    	shape = new Rectangle(x, y, 32, MainGame.BASIC_SIZE*3);
+	    	shape = new Rectangle(x, y, 32, MainGame.BASIC_SIZE);
 	    	image = new Image("res/fairy1.png");	
 	    }
 	    this.mass = 1;

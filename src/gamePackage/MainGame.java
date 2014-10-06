@@ -223,9 +223,9 @@ public class MainGame extends BasicGame{
 	}
 
 	private void goddessController(GameContainer container, Input input) {
-		if(swordman.shape.intersects(goddess.shape) && input.isKeyPressed(Input.KEY_Z)){
+		if(swordman.shape.intersects(goddess.shape) && input.isKeyDown(Input.KEY_Z)){
 			 //container.setPaused(true);
-			 goddess.x = (float) Math.random()*550;
+			 goddess.x = (float) Math.random()*600;
 			 times = 30;
 		 }
 		goddess.shape.setLocation(goddess.getX(),goddess.getY());
