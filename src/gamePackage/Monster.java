@@ -100,4 +100,25 @@ public class Monster {
 		}
 	}
 
+	void monsterController(MainGame mainGame) throws SlickException {
+	
+		// shape
+		if (isDestroy == false) {
+			shape.setLocation(getX(), getY());
+			monsterBehind.setLocation(getX() + 6,
+					getY());
+		}
+		//
+		// died
+		if (hp <= 0) {
+			destroy();
+		}
+	
+		if (x <= 0) {
+			// monster.x = 0;
+			setPosition();
+		}
+	
+	}
+
 }

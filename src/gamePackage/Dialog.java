@@ -1,6 +1,8 @@
 package gamePackage;
 
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 
 public class Dialog {
@@ -48,6 +50,16 @@ public class Dialog {
 	public float getX() {
 		// TODO Auto-generated method stub
 		return x;
+	}
+
+	void animationTimesControl(MainGame mainGame, GameContainer container, Input input) {
+		if (input.isKeyPressed(Input.KEY_Z)) {
+			animation += 1;
+			if (animation == 3) {
+				container.resume();
+				animation += 1;
+			}
+		}
 	}
 
 }

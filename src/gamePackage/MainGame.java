@@ -191,7 +191,7 @@ public class MainGame extends BasicGame {
 			swordman.swordmanController(this, input, delta, monster, container);
 			timesAndAnimationController(container, monster, input);
 			BGController();
-			monsterController(monster);
+			monster.monsterController(this);
 			battleController(monster);
 			REPLAYABLE(container, input);
 			goddess.goddessController(this, container, input);
@@ -269,27 +269,6 @@ public class MainGame extends BasicGame {
 		}
 	}
 
-	private void monsterController(Monster monster) throws SlickException {
-
-		// shape
-		if (monster.isDestroy == false) {
-			monster.shape.setLocation(monster.getX(), monster.getY());
-			monster.monsterBehind.setLocation(monster.getX() + 6,
-					monster.getY());
-		}
-		//
-		// died
-		if (monster.hp <= 0) {
-			monster.destroy();
-		}
-
-		if (monster.x <= 0) {
-			// monster.x = 0;
-			monster.setPosition();
-		}
-
-	}
-
 	private void BGController() {
 		// BG.x -= 0.2*deltax /17;
 		if (BG.x < -200) {
@@ -299,19 +278,14 @@ public class MainGame extends BasicGame {
 
 	private void timesAndAnimationController(GameContainer container,
 			Monster monster, Input input) {
+		//times
 		times -= 0.01 * deltax / 60;
 		totaltimes += 0.01 * deltax / 60;
+		//animation
 		swordman.animationTimesControl(this);
 		goddess.animationTimesControl(this);
 		monster.animationTimesControl(this);
-
-		if (input.isKeyPressed(Input.KEY_Z)) {
-			intro.animation += 1;
-			if (intro.animation == 3) {
-				container.resume();
-				intro.animation += 1;
-			}
-		}
+		intro.animationTimesControl(this, container, input);
 
 		if (times <= 0) {
 			times = 0;
@@ -330,7 +304,8 @@ public class MainGame extends BasicGame {
 			appgc.setVSync(true);
 			// appgc.setMinimumLogicUpdateInterval(1);
 			// appgc.setMaximumLogicUpdateInterval(1);
-			// appgc.setShowFPS(false);
+			appgc.setShowFPS(false);
+			//appgc.setUpdateOnlyWhenVisible(true);
 			// appgc.setClearEachFrame(true);
 			appgc.start();
 		} catch (SlickException e) {

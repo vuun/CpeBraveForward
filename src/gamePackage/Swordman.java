@@ -14,6 +14,7 @@ public class Swordman {
 	public float fadetimes;
 	public float animationTimes;
 	public int animation = 0;
+	public float walkLeftTimes = 0;
 
 	public float mass;
 	public float hp;
@@ -129,39 +130,42 @@ public class Swordman {
 		return image.isDestroyed();
 	}
 
-	void swordmanController(MainGame mainGame, Input input, int delta, Monster monster, GameContainer container) throws SlickException {
+	void swordmanController(MainGame mainGame, Input input, int delta,
+			Monster monster, GameContainer container) throws SlickException {
 		// shape
 		shape.setLocation(getX(), getY());
 		// control
-		if (x > -32 && input.isKeyDown(Input.KEY_LEFT)
-				&& mainGame.swordAtBehind == false) {
+		if (x > -32 && input.isKeyDown(Input.KEY_LEFT)) {
 			Flip();
-			x -= delta * speed;
-	
+
+			if (mainGame.swordAtBehind == false) {
+				x -= delta * speed;
+			}
+
 		}
 		if (y <= MainGame.SCREEN_HEIGHT / 2 + (64 * 3) + 1
 				&& input.isKeyDown(Input.KEY_DOWN)) {
-			mainGame.swordAtBehind = false;
 			Facedown();
+			mainGame.swordAtBehind = false;
 			y += delta * speed;
 		}
 		if (input.isKeyDown(Input.KEY_UP)) {
-			mainGame.swordAtBehind = false;
 			Faceup();
+			mainGame.swordAtBehind = false;
 			if (y >= MainGame.SCREEN_HEIGHT / 2 - (32)) {
 				y -= delta * speed;
 			}
 		}
-	
+
 		else if (shape.intersects(monster.shape) != true) {
-	
+
 			if (x + 64 < MainGame.SCREEN_WIDTH
 					&& input.isKeyDown(Input.KEY_RIGHT)) {
 				FlipBack();
 				mainGame.swordAtBehind = false;
 				x += delta * speed;
 			}
-	
+
 		}
 		// hp control
 		if (hp <= 0) {
@@ -173,14 +177,20 @@ public class Swordman {
 			mainGame.gameIsOver = true;
 			container.setPaused(true);
 		}
-	
+
 		if (x + 64 >= MainGame.SCREEN_WIDTH) {
 			x = MainGame.SCREEN_WIDTH - 64;
 		}
 		if (shape.intersects(monster.monsterBehind)) {
 			mainGame.swordAtBehind = true;
 		}
-	
+		walkLeftTimes +=  0.01 * mainGame.deltax / 20;
+		if(walkLeftTimes >= 0.4){
+			walkLeftTimes = 0;
+			mainGame.swordAtBehind = false;
+		}
+
+
 	}
 
 	void animationTimesControl(MainGame mainGame) {
